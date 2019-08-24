@@ -1,0 +1,105 @@
+<style lang="less">
+
+</style>
+<template>
+
+<view style="padding:80rpx 30rpx;text-align:center;">
+
+<image style="width:200rpx;border-raduis:50%;"   src="../static/images/logo.jpg" mode="widthFix">
+</image>
+
+  <view style="padding:10rpx 0 20rpx 0;color:#999;">获取你的昵称，头像等</view>
+  <button open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">微信登录</button>
+
+</view>
+
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import util from '../utils/util.js'
+    import api from '../config/api.js'
+
+  export default class Example extends wepy.page {
+    config = {
+      navigationBarTitleText: '用户授权'
+    }
+
+      async  userInfoSave(obj) {
+
+          let rs = await util.request(api.userInfoSave,obj,"post");
+		  
+          if(rs.code==1000)
+          {
+
+              wepy.setStorageSync('shouquan',1);
+
+			  wx.redirectTo({
+				   url: "/pages/index"
+				})
+			  
+          }
+		  else if(rs.code==1003)
+		  {
+		    util.showErrorToast('请先绑定');
+			
+			setTimeout(function()
+			{
+				
+				wx.redirectTo({
+				   url: "/pages/bind"
+				})
+				
+			},500)
+			
+			
+		  }
+          else
+          {
+              util.showErrorToast('授权失败');
+          }
+
+
+      }
+
+     methods = {
+        onGotUserInfo: function (e) {
+          console.log(e.detail.errMsg)
+            if(e.detail.errMsg=="getUserInfo:ok")
+            {
+                console.log(e.detail.userInfo.avatarUrl);
+                console.log(this.$parent.globalData.userInfo);
+                this.$parent.globalData.userInfo.m_avatar=e.detail.userInfo.avatarUrl;
+                this.$parent.globalData.userInfo.m_nickname=e.detail.userInfo.nickName;
+
+                wepy.setStorageSync('userInfo',this.$parent.globalData.userInfo);
+
+
+                var obj={
+                    m_openid:this.$parent.globalData.openid,
+                    m_avatar:e.detail.userInfo.avatarUrl,
+                    m_nickname:e.detail.userInfo.nickName
+                }
+
+                console.log(obj);
+                this.userInfoSave(obj);
+
+
+
+
+            }
+            else
+            {
+                util.showErrorToast('授权失败');
+            }
+
+        }
+     }
+
+    onLoad() {
+
+
+
+    }
+  }
+</script>

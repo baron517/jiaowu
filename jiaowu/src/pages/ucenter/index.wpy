@@ -1,0 +1,333 @@
+<style lang="less">
+  page{
+    height: 100%;
+    width: 100%;
+    background: #f4f4f4;
+  }
+  .container{
+    background: #f4f4f4;
+    height: auto;
+    overflow: hidden;
+    width: 100%;
+  }
+  .profile-info{
+    width: 100%;
+    height: 280rpx;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 30.25rpx;
+    background: #333;
+  }
+
+  .profile-info .avatar{
+    height: 148rpx;
+    width: 148rpx;
+    border-radius: 50%;
+  }
+
+  .profile-info .info{
+    flex: 1;
+    height: 85rpx;
+    padding-left: 31.25rpx;
+  }
+
+  .profile-info .name{
+    display: block;
+    height: 45rpx;
+    line-height: 45rpx;
+    color: #fff;
+    font-size: 37.5rpx;
+    margin-bottom: 10rpx;
+  }
+
+  .profile-info .level{
+    display: block;
+    height: 30rpx;
+    line-height: 30rpx;
+    margin-bottom: 10rpx;
+    color: #7f7f7f;
+    font-size: 30rpx;
+  }
+
+  .user-menu{
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .user-menu .item{
+    float: left;
+    width: 33.33333%;
+    height: 187.5rpx;
+    border-right: 1px solid rgba(0,0,0,.15);
+    border-bottom: 1px solid rgba(0,0,0,.15);
+    text-align: center;
+  }
+
+  .user-menu .item .a{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .user-menu .item.no-border {
+    border-right: 0;
+  }
+
+  .user-menu .item.item-bottom {
+    border-bottom: none;
+  }
+
+  .user-menu .item image{width:60rpx;height:60rpx;}
+
+  .user-menu .icon{
+    margin: 0 auto;
+    display: block;
+    height: 52.803rpx;
+    width: 52.803rpx;
+    margin-bottom: 16rpx;
+  }
+
+  .user-menu .icon.dingdan{
+    background: url(https://wxyy.cnyinfei.com/images/dingdan.png);
+    background-size: 52.803rpx;
+  }
+
+  .user-menu .icon.yuyue{
+    background: url(https://wxyy.cnyinfei.com/images/yuyue.png);
+    background-size: 52.803rpx;
+  }
+
+  .user-menu .icon.pingjia{
+    background: url(https://wxyy.cnyinfei.com/images/pingjia.png);
+    background-size: 52.803rpx;
+  }
+
+  .user-menu .icon.zhifu{
+    background: url(https://wxyy.cnyinfei.com/images/zhifu.png);
+    background-size: 52.803rpx;
+  }
+
+  .user-menu .icon.daishiyong{
+    background: url(https://wxyy.cnyinfei.com/images/daishiyong.png);
+    background-size: 52.803rpx;
+  }
+
+    .user-menu .icon.daipingjia{
+    background: url(https://wxyy.cnyinfei.com/images/daipingjia.png);
+    background-size: 52.803rpx;
+  }
+
+  .user-menu .icon.kefu{
+    background: url(https://wxyy.cnyinfei.com/images/kefu.png);
+    background-size: 52.803rpx;
+  }
+
+  .user-menu .icon.huiyuanka{
+    background: url(https://wxyy.cnyinfei.com/images/huiyuanka.png);
+    background-size: 52.803rpx;
+  }
+
+  .user-menu .icon.youhuiquan{
+    background: url(https://wxyy.cnyinfei.com/images/youhuiquan.png);
+    background-size: 52.803rpx;
+  }
+
+  
+
+  .user-menu .txt{
+    display: block;
+    height: 24rpx;
+    width: 100%;
+    font-size: 24rpx;
+    color:#333;
+  }
+
+  .user-menu .txt .quan{width:30rpx;font-size:20rpx;height:30rpx;position: absolute;line-height:30rpx;top:30rpx;right:30rpx;background: #06c1ae;color:#fff;text-align: center;display: block;border-radius: 50%;}
+
+  .logout{
+    margin-top: 50rpx;
+    height: 101rpx;
+    width: 100%;
+    line-height: 101rpx;
+    text-align: center;
+    background: #fff;
+    color: #333;
+    font-size: 30rpx;
+  }
+
+  .iconfont{font-size:30px;color:#555;}
+
+</style>
+<template>
+  <view class="container">
+    <view class="profile-info">
+      <image class="avatar" src="{{userInfo.m_avatar}}"></image>
+      <view class="info">
+        <text class="name" @tap="shouquan()">{{userInfo.m_nickname}}</text>
+        <text class="level">{{userInfo.m_phone}}</text>
+
+
+      </view>
+    </view>
+
+    <view class="user-menu">
+
+      <view class="item" wx:if="{{m_type==1}}">
+        <navigator url="/pages/ucenter/liuyan" class="a">
+          <i class="iconfont icon-liuyan"></i>
+          <text class="txt">留言投诉</text>
+        </navigator>
+      </view>
+
+      <view class="item">
+        <view  class="a" @tap="tel()">
+          <i class="iconfont icon-tel"></i>
+          <text class="txt">联系客服</text>
+        </view>
+      </view>
+
+      <view class="item no-border" wx:if="{{m_type==1}}">
+        <navigator url="/pages/ucenter/xiugai" class="a">
+          <i class="iconfont icon-xiugai"></i>
+          <text class="txt">修改资料</text>
+        </navigator>
+      </view>
+
+      <view class="item" wx:if="{{m_type==1}}">
+        <navigator url="/pages/kaoshi/kecheng" class="a">
+          <i class="iconfont icon-shu"></i>
+          <text class="txt">课时记录</text>
+        </navigator>
+      </view>
+
+      <view class="item" wx:if="{{m_type==1}}">
+        <navigator url="/pages/ucenter/qingjia" class="a">
+          <i class="iconfont icon-qingjia"></i>
+          <text class="txt">我要请假</text>
+        </navigator>
+      </view>
+
+      <view class="item" wx:if="{{m_type==1}}">
+        <navigator url="/pages/ucenter/qingjiaList" class="a">
+          <i class="iconfont icon-jilu"></i>
+          <text class="txt">请假记录</text>
+        </navigator>
+      </view>
+
+      
+
+     
+    </view>
+
+    <view class="logout" bindtap="exitLogin" wx:if="{{token}}">退出登录</view>
+  </view>
+  
+  
+   <view class="tab-bar">
+
+     <navigator  open-type="redirect" class="tab-item" url="/pages/index">
+       <i class="icon-home iconfont" mode="aspectFill"></i>
+       <view>首页</view>
+     </navigator>
+
+     <navigator  open-type="redirect" class="tab-item" url="/pages/category/catalog">
+       <i class="icon-choiceness iconfont" mode="aspectFill"></i>
+       <view>作品</view>
+     </navigator>
+
+     <navigator  open-type="redirect" class="tab-item" url="/pages/topic/index">
+       <i class="icon-community iconfont" mode="aspectFill"></i>
+       <view>生活</view>
+     </navigator>
+
+     <navigator  open-type="redirect" class="tab-item active" url="/pages/ucenter/index">
+       <i class="icon-peoplefill iconfont" mode="aspectFill"></i>
+       <view>我的</view>
+     </navigator>
+  
+  </view>
+  
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import util from '../../utils/util.js'
+  import api from '../../config/api.js'
+  import user from '../../services/user.js'
+
+  export default class Index extends wepy.page {
+
+    config = {
+      backgroundColor: '#f4f4f4',
+      navigationBarTitleText: '会员中心'
+    }
+    data = {
+      countList:{},
+      userInfo: {},
+      token: '',
+      m_type:1,
+	  color:'',
+      m_is_js:''
+    }
+
+    async getUserInfo() {
+
+      var userInfo=wepy.getStorageSync('userInfo');
+      if(userInfo)
+      {
+        let res = await util.request(api.getUserInfo, { m_openid: userInfo.m_openid });
+        if(res.code==1000)
+        {
+          console.log(res.data);
+          this.$parent.globalData.userInfo=res.data;
+          wepy.setStorageSync('userInfo',this.$parent.globalData.userInfo);
+
+          this.userInfo =res.data;
+          this.$apply();
+
+        }
+      }
+
+
+
+    }
+
+
+    onLoad() {
+      console.log(this.$parent.globalData);
+
+      this.m_type=this.$parent.globalData.userInfo.m_type;
+
+    }
+
+
+    onShow() {
+
+      this.getUserInfo();
+
+
+
+    }
+    methods = {
+
+      async tel () {
+        wx.makePhoneCall({
+          phoneNumber: '18805875258'
+        })
+      },
+	  async shouquan () {
+         wx.navigateTo({
+                url: "/pages/shouquan"
+              })
+      }
+    }
+  }
+</script>

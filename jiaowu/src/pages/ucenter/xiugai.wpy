@@ -1,0 +1,182 @@
+<style lang="less">
+    .form-col .form-row{position: relative;border-bottom:1px solid #ddd;padding-top:20rpx;}
+    .form-col .form-row input, .form-col .form-row .date{text-align: left;font-size:28rpx;padding:12rpx 8rpx;padding-left:140rpx;box-sizing: border-box;height:80rpx;}
+    .form-col .form-row .date{padding-top:0;padding-bottom:0;}
+    .form-col .form-row .picker{line-height: 80rpx;height:80rpx;}
+    .form-col .form-row label{position: absolute;left:0;top:40rpx;}
+    .form-col .send-row .send{position: absolute;right:0;top:16rpx;display: inline-block;padding:20rpx 40rpx;font-size:26rpx;background: #fff;z-index:1000;}
+    .form-col .form-row label.radio{display: inline-block;position: relative;margin:0 20rpx;left:auto;top:10rpx;}
+    .form-col .form-row .radio-group{height:80rpx;}
+</style>
+<template>
+
+<view style="padding:40rpx 30rpx;text-align:center;" class="form-col">
+
+
+  <view class="form-row">
+
+        <label>家长姓名：</label><input value="{{userInfo.m_pname}}" bindinput="m_pnameFunc"  placeholder="输入家长姓名" type="text"/>
+
+  </view>
+
+    <view class="form-row">
+
+        <label>家长手机：</label><input value="{{userInfo.m_phone}}" bindinput="m_phoneFunc"  placeholder="输入家长手机" type="text"/>
+
+    </view>
+
+    <view class="form-row">
+
+        <label>学生姓名：</label><input value="{{userInfo.m_cname}}" bindinput="m_cnameFunc"  placeholder="输入家长姓名" type="text"/>
+
+    </view>
+
+    <view class="form-row">
+
+        <label>学生出生：</label>
+
+        <picker mode="date" class="date" value="{{userInfo.m_chusheng}}" start="1978-01-01" end="2217-1-23" bindchange="bindDateChange1">
+            <view class="picker">
+                {{userInfo.m_chusheng?userInfo.m_chusheng:""}}
+            </view>
+        </picker>
+
+
+
+    </view>
+
+    <view class="form-row">
+
+        <label>学生性别：</label>
+
+        <radio-group class="radio-group" bindchange="radioChange">
+            <label class="radio">
+                <radio class="radio" value="男" checked="{{userInfo.m_sex=='男'?'checked':''}}"  />男
+            </label>
+            <label class="radio">
+                <radio class="radio" value="女" checked="{{userInfo.m_sex=='女'?'checked':''}}"  />女
+            </label>
+        </radio-group>
+
+<!--
+        <input value="{{userInfo.m_sex}}" bindinput="m_sex"  placeholder="输入家长姓名" type="text"/>-->
+
+    </view>
+
+
+
+
+
+  <button  style="background: #06c1ae;color:#fff;margin-top:50rpx;font-size:28rpx;" @tap="tijiao">立即提交</button>
+
+</view>
+
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import util from '../../utils/util.js'
+    import api from '../../config/api.js'
+
+  export default class Example extends wepy.page {
+    config = {
+      navigationBarTitleText: '修改资料'
+    }
+
+      data={
+          userInfo:{
+              m_chusheng:""
+          }
+        }
+
+      async  saveUserInfo(obj) {
+
+          let rs = await util.request(api.userInfoSave,obj,"post");
+          if(rs.code==1000)
+          {
+
+
+              wepy.showToast({
+                  title: "提交成功",
+                  duration: 2000
+              })
+
+
+              setTimeout(function()
+              {
+
+                  wx.redirectTo({
+                      url: "/pages/ucenter/index"
+                  })
+
+              },500)
+
+          }
+          else
+          {
+              util.showErrorToast(rs.msg);
+          }
+
+      }
+
+     methods = {
+         tijiao:function()
+         {
+
+             console.log(this.userInfo);
+
+             if(!this.userInfo.m_pname)
+             {
+                 util.showErrorToast('家长不能为空');
+                 return;
+             }
+
+             if(!this.userInfo.m_phone)
+             {
+                 util.showErrorToast('手机不能为空');
+                 return;
+             }
+             if(!this.userInfo.m_cname)
+             {
+                 util.showErrorToast('学生不能为空');
+                 return;
+             }
+
+             this.userInfo.m_openid=this.$parent.globalData.openid;
+
+             this.saveUserInfo(this.userInfo);
+
+         },
+         bindDateChange1(e)
+         {
+             this.userInfo.m_chusheng= e.detail.value;
+
+         },
+         m_pnameFunc:function(e)
+         {
+             this.userInfo.m_pname= e.detail.value
+         },
+         m_cnameFunc:function(e)
+         {
+             this.userInfo.m_cname= e.detail.value
+         },
+         m_phoneFunc:function(e)
+         {
+             this.userInfo.m_phone= e.detail.value
+         },
+         radioChange: function (e) {
+
+             this.userInfo.m_sex = e.detail.value;
+
+         }
+
+
+     }
+
+    onLoad() {
+
+        this.userInfo=wepy.getStorageSync("userInfo");
+
+    }
+  }
+</script>

@@ -1,0 +1,244 @@
+<style lang="less">
+  page ,.container{
+    width: 750rpx;
+    height: 100%;
+    overflow: hidden;
+    background: #f4f4f4;
+  }
+  .topic-list{
+    width: 750rpx;
+    height: 100%;
+    overflow: hidden;
+    background: #f4f4f4;
+  }
+
+  .topic-list .item{
+    width: 100%;
+    height: 320rpx;
+    overflow: hidden;
+    margin-bottom: 20rpx;
+  }
+
+  .topic-list .img{
+    margin-top:26rpx;
+    margin-right:20rpx;
+    margin-left:30rpx;
+    float:left;
+    width:150rpx;
+    height:150rpx;
+    border-radius:6rpx;
+
+  }
+
+  .topic-list .info{
+    width: 100%;
+    height: 320rpx;
+    overflow: hidden;
+    background: #d9282e;
+    box-sizing: border-box;
+    color:#fff;
+  }
+.topic-list .info .info-middle{height:180rpx;}
+  .topic-list .info .info-right{float:left;width:416rpx;color:#fff;}
+
+  .topic-list .info .top-text{border-bottom:1px dashed #fff;color:#fff;line-height:50rpx;padding-left:20rpx;}
+  .topic-list .info text{color:#fff;}
+  .topic-list button{border:1px solid #fff;background: transparent;color:#fff;display: inline-block;line-height:50rpx;font-size:24rpx;}
+
+
+  .topic-list .title{
+    display: block;
+    text-align: center;
+    width: 100%;
+    height: 33rpx;
+    line-height: 35rpx;
+    color: #fff;
+    overflow: hidden;
+    font-size: 35rpx;
+    margin-top: 30rpx;
+  }
+
+  .topic-list .title .left-col{float:left;}
+  .topic-list .title .right-col{float:right;}
+  .topic-list .desc .left-col{float:left;}
+  .topic-list .desc .right-col{float:right;}
+  .topic-list .desc{
+    display: block;
+    text-align: left;
+    position: relative;
+    width: auto;
+    height: 30rpx;
+    line-height: 30rpx;
+    overflow: hidden;
+    font-size: 24rpx;
+    margin-top: 10rpx;
+    margin-bottom: 10rpx;
+  }
+
+  .topic-list .desc .text{color: #fff;position: relative;}
+  .topic-list .desc .text.huadiao::before{display: block;content:"";width:100%;left:0;position: absolute;height:1px;background: #fff;}
+  .topic-list .desc.bottom{height:56px;padding:0 30rpx;}
+  .topic-list .desc.bottom .left-col{margin-top:10rpx;}
+
+  .topic-list .price{
+    display: block;
+    text-align: center;
+    width: 100%;
+    height: 27rpx;
+    line-height: 27rpx;
+    overflow: hidden;
+    color: #06c1ae;
+    font-size: 27rpx;
+  }
+
+
+ 
+
+  .info-col{padding:20rpx 30rpx;}
+
+</style>
+<template>
+  <view class="container">
+    <scroll-view class="topic-list" scroll-y="true">
+
+      <view class="info-col">
+
+
+      <navigator class="item" wx:for="{{topicList}}"  wx:key="{{item.hy_id}}" url="detail?id={{item.hy_id}}" wx:if="{{item.hy_id>m_hy_id}}">
+        <view class="info" style="background: url('{{item.hy_img}}');background-size: 100% 100%;">
+          <view class="top-text">会员卡</view>
+          <view class="info-middle">
+
+            <view class="img"></view>
+
+            <view class="info-right">
+            <view class="title"><text class="left-col">{{item.hy_name}}</text></view>
+            <view class="desc"><text class="left-col yuanjia">价格：￥{{item.hy_jiage}}</text></view>
+            <view class="desc"><text class="text">折扣：消费打{{item.hy_zhekou}}折</text></view>
+            </view>
+
+          </view>
+
+          <view class="desc bottom"><text class="left-col">杭州胤妃美业</text>
+            <button data-price="{{item.hy_xianjia}}" wx:if="{{item.hy_id>m_hy_id&&m_hy_id!=0}}" class="right-col">立即升级</button>
+
+            <button data-price="{{item.hy_xianjia}}" wx:if="{{m_hy_id==0}}" class="right-col">立即购买</button>
+
+          </view>
+
+
+        </view>
+      </navigator>
+
+
+
+      </view>
+
+    </scroll-view>
+  </view>
+  
+   <view class="tab-bar">
+  
+	<navigator  open-type="redirect" class="tab-item" url="/pages/index">
+		<image class="img" src="https://wxyy.cnyinfei.com/Api/CommonApi/getIconImg?i_id=54" mode="aspectFill"></image>
+		<view>首页</view>
+	</navigator>
+	
+	<navigator  open-type="redirect" class="tab-item" url="/pages/category/catalog">
+		<image class="img" src="https://wxyy.cnyinfei.com/Api/CommonApi/getIconImg?i_id=56" mode="aspectFill"></image>
+		<view>预约</view>
+	</navigator>
+	
+	<navigator  open-type="redirect" class="tab-item" url="/pages/chongzhi/index">
+		<image class="img" src="https://wxyy.cnyinfei.com/Api/CommonApi/getIconImg?i_id=59" mode="aspectFill"></image>
+		<view style="color:{{color}}">充值</view>
+	</navigator>
+	
+	<navigator  open-type="redirect" class="tab-item" url="/pages/topic/index">
+		<image class="img" src="https://wxyy.cnyinfei.com/Api/CommonApi/getIconImg?i_id=60" mode="aspectFill"></image>
+		<view>活动</view>
+	</navigator>
+	
+	<navigator  open-type="redirect" class="tab-item" url="/pages/ucenter/index">
+		<image class="img" src="https://wxyy.cnyinfei.com/Api/CommonApi/getIconImg?i_id=62" mode="aspectFill"></image>
+		<view>我的</view>
+	</navigator>
+  
+  </view>
+  
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import util from '../../utils/util.js'
+  import api from '../../config/api.js'
+
+  export default class Index extends wepy.page {
+    data = {
+      topicList: [],
+      page: 1,
+      size: 10,
+      m_hy_id:0,
+      count: 0,
+	  color:'',
+      showPage: false
+    }
+
+    async getUserInfo() {
+
+      let res = await util.request(api.getUserInfo, { m_id: this.$parent.globalData.userInfo.m_id });
+      if(res.code==1000)
+      {
+        this.getTopic();
+
+        this.$parent.globalData.userInfo=res.data;
+        wepy.setStorageSync('userInfo',this.$parent.globalData.userInfo);
+
+        this.userInfo = this.$parent.globalData.userInfo;
+
+        this.m_hy_id=this.$parent.globalData.userInfo.m_hy_id;
+
+        console.log(this.$parent.globalData.userInfo);
+        this.$apply()
+
+      }
+
+    }
+
+    async onShow() {
+
+      await this.getUserInfo();
+	  
+	  this.color= this.$parent.globalData.color;
+	  this.$apply();
+
+
+
+
+    }
+
+
+    async getTopic() {
+
+      this.showPage = false
+      this.topicList = []
+      this.$apply()
+      // 页面渲染完成
+      wepy.showToast({
+        title: '加载中...',
+        icon: 'loading',
+        duration: 2000
+      })
+      let res = await util.request(api.getHuiyuanka, { page: this.page, size: this.size })
+      if (res.errno === 0) {
+
+        this.topicList = res.data
+        this.$apply()
+      }
+      wepy.hideToast()
+    }
+    methods = {
+
+    }
+  }
+</script>

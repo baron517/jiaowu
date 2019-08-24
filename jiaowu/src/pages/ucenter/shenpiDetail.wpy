@@ -1,0 +1,159 @@
+<style lang="less">
+
+    .form-col .form-row{position: relative;border-bottom:1px solid #ddd;padding-top:20rpx;}
+    .form-col .form-row input, .form-col .form-row .date{text-align: left;font-size:28rpx;padding:12rpx 8rpx;padding-left:140rpx;box-sizing: border-box;height:80rpx;}
+    .form-col .form-row .date{padding-top:0;padding-bottom:0;}
+    .form-col .form-row .picker{line-height: 80rpx;height:80rpx;}
+    .form-col .form-row label{position: absolute;left:0;top:40rpx;}
+    .form-col .send-row .send{position: absolute;right:0;top:16rpx;display: inline-block;padding:20rpx 40rpx;font-size:26rpx;background: #fff;z-index:1000;}
+    .form-col .form-row label.radio{display: inline-block;position: relative;margin:0 20rpx;left:auto;top:10rpx;}
+    .form-col .form-row .radio-group{height:80rpx;}
+
+</style>
+<template>
+
+    <view style="padding:40rpx 30rpx;" class="form-col">
+
+
+        <view class="info">
+
+            <view class="desc">
+                开始时间：{{detail.q_start_time}}
+            </view>
+
+            <view class="desc">
+                结束时间：{{detail.q_end_time}}
+            </view>
+
+            <view class="desc">
+                请假学生：{{detail.m_cname}}
+            </view>
+
+            <view class="desc">
+                学生家长：{{detail.m_pname}}
+            </view>
+
+            <view class="desc">
+                请假原因：{{detail.q_reason}}
+            </view>
+
+
+        </view>
+
+        <view class="form-row" style="padding-left:100rpx;">
+
+            <label>审核：</label>
+
+            <radio-group class="radio-group" bindchange="radioChange">
+                <label class="radio">
+                    <radio class="radio" value="通过"  />通过
+                </label>
+                <label class="radio">
+                    <radio class="radio" value="拒绝"   />拒绝
+                </label>
+            </radio-group>
+
+
+        </view>
+
+
+        <view class="form-row">
+
+            <textarea value="{{l_detail}}"   bindinput="bindNeirong" placeholder="审核备注"></textarea>
+
+        </view>
+
+
+
+        <button  style="background: #06c1ae;color:#fff;margin-top:50rpx;font-size:28rpx;" @tap="tijiao">立即提交</button>
+
+    </view>
+
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import util from '../../utils/util.js'
+    import api from '../../config/api.js'
+
+    export default class Example extends wepy.page {
+        config = {
+            navigationBarTitleText: '审批'
+        }
+
+        data={
+            detail:{},
+            l_detail:'',
+            q_status:'',
+            q_beizhu:'',
+            q_id:''
+
+        }
+
+        async  liuyanHuifu (obj) {
+
+            let rs = await util.request(api.shenhe,obj,"post");
+
+            if(rs.code==1000)
+            {
+
+                wepy.showToast({
+                    title: "提交成功",
+                    duration: 2000
+                })
+
+
+                setTimeout(function()
+                {
+
+                    wx.navigateBack();
+
+                },500)
+
+            }
+            else
+            {
+                util.showErrorToast(rs.msg);
+            }
+
+        }
+
+        methods = {
+            tijiao:function()
+            {
+
+                this.liuyanHuifu({q_beizhu:this.l_detail,q_id:this.q_id,q_status:this.q_status});
+
+            },
+            radioChange: function (e) {
+
+                this.q_status = e.detail.value;
+
+            },
+            bindNeirong:function(e)
+            {
+                this.l_detail= e.detail.value
+            }
+
+        }
+
+        async onLoad(options) {
+
+            this.q_id=options.id;
+            console.log("q_id:"+this.q_id);
+
+            let res = await util.request(api.qingjiaDetail,{q_id:this.q_id})
+
+            console.log(res);
+
+            if (res.code == 1000) {
+
+                this.detail=res.data;
+                this.$apply();
+
+            }
+
+
+        }
+    }
+</script>

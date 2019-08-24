@@ -1,0 +1,131 @@
+<style lang="less">
+    .form-col .form-row{position: relative;padding-top:20rpx;}
+    .form-col .form-row input{text-align: left;font-size:28rpx;padding:12rpx 8rpx;border:1px solid #ddd;}
+    .form-col .form-row textarea{border:1px solid #ddd;width:100%;text-align: left;padding:12rpx 8rpx;}
+    .form-col .send-row .send{position: absolute;right:0;top:16rpx;display: inline-block;padding:20rpx 40rpx;font-size:26rpx;background: #fff;z-index:1000;}
+
+</style>
+<template>
+
+<view style="padding:40rpx 30rpx;" class="form-col">
+
+
+    <view class="info">
+        <text class="title">{{detail.l_title}}</text>
+        <view>
+            家长：{{detail.m_pname}} 时间：{{detail.l_time}}
+        </view>
+        <view>
+            状态：<text wx:if="{{detail.l_status=='已分配'}}">未回复</text>
+            <text wx:elif>已回复</text>
+        </view>
+        <view class="desc">
+            内容：{{detail.l_detail}}
+        </view>
+
+    </view>
+
+
+    <view class="form-row">
+
+        <textarea value="{{l_detail}}"   bindinput="bindNeirong" placeholder="回复内容"></textarea>
+
+    </view>
+
+
+
+  <button  style="background: #06c1ae;color:#fff;margin-top:50rpx;font-size:28rpx;" @tap="tijiao">立即提交</button>
+
+</view>
+
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import util from '../../utils/util.js'
+    import api from '../../config/api.js'
+
+  export default class Example extends wepy.page {
+    config = {
+      navigationBarTitleText: '留言回复'
+    }
+
+      data={
+      l_detail:"",
+      detail:{},
+      l_title:"",
+      l_id:''
+
+  }
+
+     async  liuyanHuifu (obj) {
+
+          let rs = await util.request(api.liuyanHuifu,obj,"post");
+          if(rs.code==1000)
+          {
+
+
+              wepy.showToast({
+                  title: "提交成功",
+                  duration: 2000
+              })
+
+
+              setTimeout(function()
+              {
+                 
+				    wx.navigateBack();
+				  
+              },500)
+
+          }
+          else
+          {
+              util.showErrorToast(rs.msg);
+          }
+
+      }
+
+     methods = {
+         tijiao:function()
+         {
+
+             if(!this.l_detail)
+             {
+                 util.showErrorToast('内容不能为空');
+                 return;
+             }
+
+             this.liuyanHuifu({l_huifu_neirong:this.l_detail,l_ls_id:this.$parent.globalData.userInfo.m_id,l_id:this.l_id});
+
+         },
+         bindBiaoti:function(e)
+         {
+             this.l_title= e.detail.value
+         },
+         bindNeirong:function(e)
+         {
+            this.l_detail= e.detail.value
+         }
+
+     }
+
+    async onLoad(options) {
+
+        this.l_id=options.id;
+        console.log("l_id:"+this.l_id);
+        let res = await util.request(api.liuyanDetail,{l_id:this.l_id})
+
+        console.log(res);
+
+        if (res.code == 1000) {
+
+            this.detail=res.data;
+            this.$apply();
+
+        }
+
+
+    }
+  }
+</script>

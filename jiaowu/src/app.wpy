@@ -1,0 +1,263 @@
+<style>
+  .container {
+    box-sizing: border-box;
+    background-color: #fff;
+    font-family: PingFangSC-Light,helvetica,'Heiti SC';
+	padding-bottom:90rpx;
+	min-height:100%;
+  }
+
+  view,image,text,navigator{
+    box-sizing: border-box;
+    padding:0;
+    margin:0;
+
+  }
+
+  view,text{
+    font-family: PingFangSC-Light,helvetica,'Heiti SC';
+    font-size: 29rpx;
+  }
+  
+  .tab-bar{height:90rpx;position:fixed;bottom:0;left:0;z-index:10;background:#F7F7FA;width:100%;font-size:24rpx;}
+  .tab-bar .tab-item{width:25%;float:left;display:block;text-align:center;font-size:28rpx;}
+  .tab-bar .tab-item i{font-size:48rpx;display: block;margin:0 auto;padding-top:4rpx;}
+  .tab-bar .tab-item.active{color:#06c1ae;}
+  .tab-bar .tab-item.active i{color:#06c1ae;}
+  .tab-bar .tab-item view{font-size:28rpx;position: relative;top:-2rpx;}
+
+  .loading{text-align: center;padding:6rpx 0;}
+
+  .clearfix:after{content:'';display:block;height:0;clear:both}
+  .clearfix{zoom:1}
+
+  .red{color:#06c1ae!important;}
+
+
+  @font-face {font-family: "iconfont";
+    src: url('//at.alicdn.com/t/font_1128037_uyc9dy8d21j.eot?t=1557399904443'); /* IE9 */
+    src: url('//at.alicdn.com/t/font_1128037_uyc9dy8d21j.eot?t=1557399904443#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('data:application/x-font-woff2;charset=utf-8;base64,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') format('woff2'),
+    url('//at.alicdn.com/t/font_1128037_uyc9dy8d21j.woff?t=1557399904443') format('woff'),
+    url('//at.alicdn.com/t/font_1128037_uyc9dy8d21j.ttf?t=1557399904443') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+    url('//at.alicdn.com/t/font_1128037_uyc9dy8d21j.svg?t=1557399904443#iconfont') format('svg'); /* iOS 4.1- */
+  }
+
+  .iconfont {
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .icon-home:before {
+    content: "\e6b8";
+  }
+
+  .icon-homefill:before {
+    content: "\e6bb";
+  }
+
+  .icon-choicenessfill:before {
+    content: "\e714";
+  }
+
+  .icon-choiceness:before {
+    content: "\e715";
+  }
+
+  .icon-tel:before {
+    content: "\e613";
+  }
+
+  .icon-peoplefill:before {
+    content: "\e735";
+  }
+
+  .icon-people:before {
+    content: "\e736";
+  }
+
+  .icon-communityfill:before {
+    content: "\e740";
+  }
+
+  .icon-community:before {
+    content: "\e741";
+  }
+
+  .icon-liuyan:before {
+    content: "\e744";
+  }
+
+  .icon-shu:before {
+    content: "\e726";
+  }
+
+  .icon-shenghuo:before {
+    content: "\e625";
+  }
+
+  .icon-jilu:before {
+    content: "\e71c";
+  }
+
+  .icon-qingjia:before {
+    content: "\e627";
+  }
+
+  .icon-xuexi:before {
+    content: "\e763";
+  }
+
+  .icon-xiugai:before {
+    content: "\e606";
+  }
+
+
+
+
+
+
+</style>
+
+
+<script>
+  /* eslint-disable keyword-spacing,indent */
+
+import wepy from 'wepy'
+import 'wepy-async-function'
+import user from './services/user.js'
+import util from './utils/util.js'
+import api from './config/api.js'
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index',
+      'pages/category/category',
+      'pages/category/video',
+      'pages/category/catalog',
+      'pages/ucenter/catalogXuanze',
+      'pages/ucenter/jishiXuanze',
+      'pages/ucenter/jishiOrder',
+      'pages/ucenter/xiugai',
+      'pages/ucenter/liuyan',
+      'pages/category/shijian',
+      'pages/brand/index',
+      'pages/brand/detail',
+      'pages/chongzhi/index',
+      'pages/chongzhi/detail',
+      'pages/goods/index',
+      'pages/goods/proDetail',
+      'pages/goods/hot',
+      'pages/goods/new',
+      'pages/topic/index',
+      'pages/topic/detail',
+      'pages/shenghuo/index',
+      'pages/shenghuo/detail',
+
+      'pages/chakanliuyan/index',
+      'pages/chakanliuyan/huifu',
+
+      'pages/xuexi/index',
+      'pages/xuexi/detail',
+
+      'pages/rizhi/index',
+      'pages/rizhi/detail',
+
+      'pages/kaoshi/index',
+      'pages/kaoshi/detail',
+
+      'pages/kaoshi/kecheng',
+
+      'pages/kaoshi/xuesheng',
+
+      'pages/comment/post',
+      'pages/comment/index',
+      'pages/search',
+      'pages/cart',
+      'pages/ucenter/index',
+      'pages/ucenter/address',
+
+      'pages/ucenter/qingjia',
+
+      'pages/ucenter/qingjiaList',
+
+      'pages/ucenter/qingjiaShenpi',
+
+      'pages/ucenter/shenpiDetail',
+
+      'pages/ucenter/yeji',
+      'pages/ucenter/paihangbang',
+
+      'pages/ucenter/pingjia',
+      'pages/ucenter/addressAdd',
+      'pages/ucenter/collect',
+      'pages/ucenter/chongzhi',
+      'pages/ucenter/coupon',
+      'pages/ucenter/couponList',
+      'pages/ucenter/feedback',
+      'pages/ucenter/footprint',
+      'pages/ucenter/order',
+      'pages/ucenter/pay',
+      'pages/ucenter/order1',
+      'pages/ucenter/order2',
+      'pages/ucenter/order3',
+      'pages/ucenter/order4',
+      'pages/ucenter/order5',
+      'pages/ucenter/maidan',
+      'pages/ucenter/orderDetail',
+      'pages/ucenter/express',
+      'pages/logs',
+      'pages/shouquan',
+      'pages/bind',
+      'pages/xieyi',
+      'pages/pay/pay',
+      'pages/pay/result',
+      'pages/shopping/address',
+      'pages/shopping/addressAdd',
+      'pages/shopping/checkout'
+    ],
+    window: {
+      backgroundTextStyle: 'dark',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: '以斯帖音乐',
+      navigationBarTextStyle: 'black',
+      enablePullDownRefresh: false
+    },
+
+   
+    'networkTimeout': {
+      'request': 10000,
+      'downloadFile': 10000
+    },
+    'debug': true,
+    "navigateToMiniProgramAppIdList": [
+          ""
+     ]
+  }
+
+  globalData = {
+    userInfo: {
+      m_nickname: 'Hi,游客',
+      m_avatar: 'https://wxyy.cnyinfei.com/images/touxiang.png'
+    },
+    openid: ''
+  }
+
+  constructor () {
+    super()
+    this.use('requestfix')
+    this.use('promisify')
+  }
+
+  async onLaunch() {
+
+
+
+
+  }
+}
+</script>

@@ -1,0 +1,193 @@
+<style lang="less">
+
+    .form-col .form-row{position: relative;border-bottom:1px solid #ddd;padding-top:20rpx;}
+    .form-col .form-row input, .form-col .form-row .date{text-align: left;font-size:28rpx;padding:12rpx 8rpx;padding-left:140rpx;box-sizing: border-box;height:80rpx;}
+    .form-col .form-row .date{padding-top:0;padding-bottom:0;}
+    .form-col .form-row .picker{line-height: 80rpx;height:80rpx;}
+    .form-col .form-row label{position: absolute;left:0;top:40rpx;}
+    .form-col .send-row .send{position: absolute;right:0;top:16rpx;display: inline-block;padding:20rpx 40rpx;font-size:26rpx;background: #fff;z-index:1000;}
+    .form-col .form-row label.radio{display: inline-block;position: relative;margin:0 20rpx;left:auto;top:10rpx;}
+    .form-col .form-row .radio-group{height:80rpx;}
+
+</style>
+<template>
+    <view style="padding:40rpx 30rpx;text-align:center;" class="form-col">
+
+
+        <view class="form-row">
+            <label>手机号码：</label>
+            <input value="{{phone}}" bindinput="bindPhone"  placeholder="输入手机号码" type="number"/>
+
+        </view>
+
+        <view class="form-row">
+
+        <label>角色</label>
+
+        <radio-group class="radio-group" bindchange="radioChange">
+            <label class="radio">
+                <radio class="radio" value="1" checked="checked"  />
+                家长
+            </label>
+            <label class="radio">
+                <radio class="radio" value="2"  />
+                老师
+            </label>
+        </radio-group>
+
+        </view>
+
+      <!--  <view class="form-row send-row">
+
+            <input type="number"  bindinput="bindCode"  placeholder="输入验证码" />
+
+            <view class="send"  @tap="send">{{sendText}}</view>
+
+        </view>-->
+
+        <button  style="background: #06c1ae;color:#fff;margin-top:50rpx;font-size:28rpx;" @tap="bangding">立即绑定</button>
+
+    </view>
+
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import util from '../utils/util.js'
+    import api from '../config/api.js'
+
+    export default class Example extends wepy.page {
+        config = {
+            navigationBarTitleText: '绑定手机'
+        }
+
+        data={
+            sendText:"发送",
+            code:"",
+            m_type:1,
+            sendFlag:1,
+            phone:""
+
+        }
+
+        async sendMsg(obj) {
+
+            this.sendFlag=0;
+            let rs = await util.request(api.sendMsg, obj);
+            if (rs.code == 1000)
+            {
+                wepy.showToast({
+                    title: "发送成功",
+                    duration: 2000
+                })
+
+                var count=59;
+                var that=this;
+                setInterval(function()
+                {
+                    if(count<=1)
+                    {
+                        that.sendText="发送";
+                        that.sendFlag=1;
+                    }
+                    else
+                    {
+                        that.sendText=count+"秒重发";
+                        count--;
+                    }
+                    that.$apply();
+
+                },1000);
+
+
+
+            }
+            else
+            {
+                util.showErrorToast("发送失败");
+            }
+        }
+
+        async  bindPhone(obj) {
+
+            let rs = await util.request(api.bindPhone,obj,"post");
+            if(rs.code==1000)
+            {
+
+                this.$parent.globalData.userInfo.m_bangding=1;
+
+                wepy.setStorageSync('userInfo',this.$parent.globalData.userInfo);
+
+                wepy.showToast({
+                    title: "绑定成功",
+                    duration: 2000
+                })
+
+                setTimeout(function()
+                {
+                    wx.redirectTo({
+                        url: "/pages/index"
+                    })
+                },500)
+
+            }
+            else
+            {
+                util.showErrorToast(rs.msg);
+            }
+
+        }
+
+        methods = {
+            bangding:function()
+            {
+                if(!this.phone)
+                {
+                    util.showErrorToast('手机不能为空');
+                    return;
+                }
+
+                this.bindPhone({m_phone:this.phone,code:this.code,m_type:this.m_type,m_openid:this.$parent.globalData.openid});
+
+            },
+            bindPhone:function(e)
+            {
+                this.phone= e.detail.value
+            },
+            bindCode:function(e)
+            {
+                this.code= e.detail.value
+            },
+            radioChange: function (e) {
+
+                this.m_type = e.detail.value;
+                console.log(this.m_type);
+
+            },
+            send: function (e) {
+
+                console.log("发送");
+
+                if(!this.phone)
+                {
+                    util.showErrorToast('手机不能为空');
+                    return;
+                }
+
+                if(this.sendFlag)
+                {
+                    this.sendMsg({phone:this.phone});
+                }
+
+
+
+            }
+        }
+
+        onLoad() {
+
+
+
+        }
+    }
+</script>

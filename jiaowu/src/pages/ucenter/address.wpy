@@ -1,0 +1,173 @@
+<style lang="less">
+  page ,.container{
+    width: 750rpx;
+    height: 100%;
+    overflow: hidden;
+    background: #f4f4f4;
+  }
+  .topic-list{
+    width: 750rpx;
+    height: 100%;
+    overflow: hidden;
+    background: #f4f4f4;
+  }
+
+  .topic-list .item{
+    width: 100%;
+    height: 320rpx;
+    overflow: hidden;
+    margin-bottom: 20rpx;
+  }
+
+  .topic-list .img{
+    margin-top:26rpx;
+    margin-right:20rpx;
+    margin-left:30rpx;
+    float:left;
+    width:150rpx;
+    height:150rpx;
+    border-radius:6rpx;
+
+  }
+
+  .topic-list .info{
+    width: 100%;
+    height: 320rpx;
+    overflow: hidden;
+    background: #d9282e;
+    box-sizing: border-box;
+    color:#fff;
+  }
+  .topic-list .info .info-middle{height:180rpx;}
+  .topic-list .info .info-right{float:left;width:416rpx;color:#fff;}
+
+  .topic-list .info .top-text{border-bottom:1px dashed #fff;color:#fff;line-height:50rpx;padding-left:20rpx;}
+  .topic-list .info text{color:#fff;}
+  .topic-list button{border:1px solid #fff;background: transparent;color:#fff;display: inline-block;line-height:50rpx;font-size:24rpx;}
+
+
+  .topic-list .title{
+    display: block;
+    text-align: center;
+    width: 100%;
+    height: 33rpx;
+    line-height: 35rpx;
+    color: #fff;
+    overflow: hidden;
+    font-size: 35rpx;
+    margin-top: 25rpx;
+  }
+
+  .topic-list .title .left-col{float:left;}
+  .topic-list .title .right-col{float:right;}
+  .topic-list .desc .left-col{float:left;}
+  .topic-list .desc .right-col{float:right;}
+  .topic-list .desc{
+    display: block;
+    text-align: left;
+    position: relative;
+    width: auto;
+    height: 30rpx;
+    line-height: 30rpx;
+    overflow: hidden;
+    font-size: 24rpx;
+    margin-top: 10rpx;
+    margin-bottom: 10rpx;
+  }
+
+  .topic-list .desc .text{color: #fff;position: relative;}
+  .topic-list .desc .text.huadiao::before{display: block;content:"";width:100%;left:0;position: absolute;height:1px;background: #fff;}
+  .topic-list .desc.bottom{height:56px;padding:0 30rpx;}
+  .topic-list .desc.bottom .left-col{margin-top:10rpx;}
+
+  .topic-list .price{
+    display: block;
+    text-align: center;
+    width: 100%;
+    height: 27rpx;
+    line-height: 27rpx;
+    overflow: hidden;
+    color: #06c1ae;
+    font-size: 27rpx;
+  }
+
+
+
+
+  .info-col{padding:20rpx 30rpx;}
+
+</style>
+<template>
+  <view class="container">
+    <scroll-view class="topic-list" scroll-y="true" scroll-top="{{scrollTop}}">
+
+      <view class="info-col">
+
+
+        <navigator class="item" wx:if="{{topicList.is_huiyuan=='1'}}" url="/pages/ucenter/chongzhi">
+
+          <view class="info" style="background: url('{{topicList.hy_img}}');background-size: 100% 100%;">
+            <view class="top-text">会员卡</view>
+            <view class="info-middle">
+
+              <view class="img"></view>
+
+              <view class="info-right">
+                <view class="title"><text class="left-col">{{topicList.m_hy_name}} {{topicList.m_kahao}}</text></view>
+                <view class="desc"><text class="left-col yuanjia">价格：￥{{topicList.m_hy_jiage}}</text></view>
+                <view class="desc"><text class="text">折扣：消费打{{topicList.m_hy_zhekou}}折</text></view>
+                <view class="desc"><text class="text">余额：{{yue}} 元</text></view>
+
+              </view>
+
+            </view>
+
+            <view class="desc bottom"><text class="left-col">杭州胤妃美业</text>
+              <button class="right-col">立即充值</button>
+            </view>
+
+
+          </view>
+        </navigator>
+
+
+
+      </view>
+
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import util from '../../utils/util.js'
+  import api from '../../config/api.js'
+
+  export default class Index extends wepy.page {
+
+    config = {
+      navigationBarTitleText: '我的会员卡'
+    }
+
+    data = {
+      topicList: {},
+      page: 1,
+      size: 10,
+      count: 0,
+      yue:0,
+      scrollTop: 0,
+      showPage: false
+    }
+    async onLoad() {
+
+      this.yue=this.$parent.globalData.userInfo.m_yue;
+      this.topicList=this.$parent.globalData.userInfo;
+      console.log(this.topicList);
+
+    }
+
+    methods = {
+
+    }
+  }
+</script>
